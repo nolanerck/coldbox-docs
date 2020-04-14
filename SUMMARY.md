@@ -222,6 +222,7 @@
 
 ## Digging Deeper
 
+* [Promises : Async Programming](digging-deeper/promises-async-programming.md)
 * [Interceptors](digging-deeper/interceptors/README.md)
   * [How do they work?](digging-deeper/interceptors/how-do-they-work/README.md)
     * [Conventions](digging-deeper/interceptors/how-do-they-work/conventions.md)

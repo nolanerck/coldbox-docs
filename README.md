@@ -1,3 +1,9 @@
+---
+description: >-
+  ColdBox is a hierarchical model view controller framework based on
+  conventions.
+---
+
 # Introduction
 
 ```text
@@ -8,7 +14,7 @@
   \____\___/|_|\__,_|____/ \___/_/\_\
 ```
 
-## ColdBox Manual - v5.x
+## ColdBox Manual - v6.x
 
 ![ColdBox Platform](.gitbook/assets/coldboxlogo2015_300.png)
 

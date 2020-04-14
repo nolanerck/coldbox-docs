@@ -1,4 +1,4 @@
-# Upgrading to ColdBox 5
+# Upgrading to ColdBox 6
 
 The major compatibility issues will be covered as well as how to smoothly upgrade to this release from previous ColdBox versions. You can also check out the [What's New](https://coldbox.ortusbooks.com/intro/introduction/whats-new-with-5.0.0) guide to give you a full overview of the changes.
 

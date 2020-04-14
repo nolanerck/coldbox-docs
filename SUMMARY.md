@@ -4,21 +4,11 @@
 
 ## Intro
 
-* [Introduction](intro/introduction/README.md)
-  * [What's New With 5.6.0](intro/introduction/whats-new-with-5.6.0.md)
-  * [What's New With 5.5.0](intro/introduction/whats-new-with-5.5.0.md)
-  * [What's New With 5.4.0](intro/introduction/whats-new-with-5.4.0.md)
-  * [What's New With 5.3.0](intro/introduction/whats-new-with-5.3.0.md)
-  * [What's New With 5.2.0](intro/introduction/whats-new-with-5.2.0.md)
-  * [What's New With 5.1.4](intro/introduction/whats-new-with-5.1.4.md)
-  * [What's New With 5.1.3](intro/introduction/whats-new-with-5.1.3.md)
-  * [What's New With 5.1.2](intro/introduction/whats-new-with-5.1.2.md)
-  * [What's New With 5.1.1](intro/introduction/whats-new-with-5.1.1.md)
-  * [What's New With 5.1.0](intro/introduction/whats-new-with-5.1.0.md)
-  * [What's New With 5.0.0](intro/introduction/whats-new-with-5.0.0.md)
-  * [Upgrading to ColdBox 5](intro/introduction/upgrading-to-coldbox-5.md)
-  * [About This Book](intro/introduction/about-this-book.md)
-  * [Author](intro/introduction/author.md)
+* [Release History](intro/release-history/README.md)
+  * [What's New With 6.0.0](intro/release-history/whats-new-with-6.0.0.md)
+  * [Upgrading to ColdBox 6](intro/release-history/upgrading-to-coldbox-5.md)
+* [About This Book](intro/about-this-book.md)
+* [Author](intro/author.md)
 
 ## For Newbies
 

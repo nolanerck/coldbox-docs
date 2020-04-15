@@ -8,6 +8,7 @@ description: To The Future with ColdBox Futures
 
 You will be able to create async pipelines and futures by using the following `AsyncManager` creation methods:
 
+* `init( value, executor, debug, loadAppContext )` :  Construct a new future. The `value` argument can be the future closure/udf.  You can also pass in a custom executor and some utility flags.
 * `newFuture( [task], [executor] ):Future` : Returns a ColdBox Future. You can pass an optional task \(closure/udf\) and even an optional executor.
 * `newCompletedFuture( value ):Future` : Returns a new future that is already completed with the given value.
 
@@ -95,9 +96,32 @@ Future function run(
 Please note that the majority of methods take in an `executor` that you can supply. This means that you can decide in which thread pool the task will execute in, or by default it will run in the `ForkJoinPool` or the same thread the computation started from.
 {% endhint %}
 
+{% hint style="danger" %}
+**WARNING:** Once you pass a closure/udf or cfc/method to the `run()` methods or the constructor, the JDK will create and send the task for execution to the appropriate executor.  You do not need to start the thread or issue a start command.  It is implied.
+{% endhint %}
+
+## ColdFusion \(CFML\) App Context
+
+The `loadAppContext` is a boolean flag that allows you to load the ColdFusion \(CFML\) application context into the running threads.  By default, this is needed if your threads will require certain things from the application context: mappings, app settings, etc.  However, some times this can cause issues and slowdowns, so be careful when selecting when to load the context or not.  As a rule of thumb, we would say to NOT load it, if you are doing pure computations or not requiring mappings or app settings.
+
+For example, the ColdBox file logger uses futures and has no app context loaded, since it does not require it.  It only monitors a log queue and streams the content to a file.  Remember, cohesion and encapsulation.  The purerer your computations are, the better and safer they will be \([https://en.wikipedia.org/wiki/Pure\_function](https://en.wikipedia.org/wiki/Pure_function)\)
+
 ## Completed Futures
 
-There are also times where you need a future to be completed immediately. For this you can build a future already completed via the `newCompletedFuture()` or by leveraging the `complete()` function in the Future object.
+There are also times where you need a future to be completed immediately. For this you can build a future already completed via the `newCompletedFuture()` or by leveraging the `complete()` function in the Future object.  This can also allow you to complete the future with an initial value if you want to.
+
+```javascript
+f = newCompletedFuture( 100 );
+
+f = newFuture( () => orderService.getData() )
+    .complete( initialValue )
+    .then()
+    .get()
+```
+
+{% hint style="success" %}
+Completed futures are great for mocking and testing scenarios
+{% endhint %}
 
 ## Usage Methods
 
@@ -256,4 +280,17 @@ Always checkout the API docs for the latest methods and signatures: [https://api
       <td style="text-align:left">Ability to attach a timeout to the execution of the allApply() method</td>
     </tr>
   </tbody>
-</table>
+</table>## Execution Status
+
+## Getting Values
+
+## Future Pipelines
+
+## Cancelling Futures
+
+## Exceptions
+
+## Combining Futures
+
+## Composing Futures
+

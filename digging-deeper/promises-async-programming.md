@@ -2,7 +2,7 @@
 description: 'ColdBox Promises, async programming and parallel computations'
 ---
 
-# Promises : Async Programming
+# Async Programming
 
 ## Introduction
 
@@ -178,10 +178,10 @@ Future function run(
 
 Here are some of the methods that will allow you to do parallel computations. Please note that the `asyncManager()` has shortcuts to these methods, but we always recommend using them via a new future, because then you can have further constructor options like: custom executor, debugging, loading CFML context and much more.
 
-* `allOf( a1, a2, ... ):array` : This method accepts an infinite amount of future objects,  closures or an array of closures/futures in order to execute them in parallel, waits for them and then processes their combined results into an array of results.
-* `allApply( items, fn, executor ):array` : This function can accept an array of items of any type and apply a function to each of the item's in parallel.  The `fn` argument receives the appropriate item and must return a result.  Consider this a parallel `map()` operation.
-* `anyOf( a1, a2, ... ):Future` : This method accepts an infinite amount of future objects, closures or an array of closures/futures and will execute them in parallel. However, instead of returning all of the results in an array like `allOf()`, this method will return the future that executes the fastest! Race Baby!
-* `withTimeout( timeout, timeUnit )` : Apply a timeout to `allOf()` or `allApply()` operations.  The `timeUnit` can be: days, hours, microseconds, milliseconds, minutes, nanoseconds, and seconds. The default is milliseconds. 
+* `all( a1, a2, ... ):Future` : This method accepts an infinite amount of future objects,  closures or an array of closures/futures in order to execute them in parallel.  It will return a future that when you call `get()` on it, it will retrieve an array of the results of all the operations.
+* `allApply( items, fn, executor ):array` : This function can accept an array of items or a struct of items of any type and apply a function to each of the item's in parallel.  The `fn` argument receives the appropriate item and must return a result.  Consider this a parallel `map()` operation.
+* `anyOf( a1, a2, ... ):Future` : This method accepts an infinite amount of future objects, closures or an array of closures/futures and will execute them in parallel. However, instead of returning all of the results in an array like `all()`, this method will return the future that executes the fastest! Race Baby!
+* `withTimeout( timeout, timeUnit )` : Apply a timeout to `all()` or `allApply()` operations.  The `timeUnit` can be: days, hours, microseconds, milliseconds, minutes, nanoseconds, and seconds. The default is milliseconds. 
 
 > Please note that some of the methods above will return a ColdBox `Future` object that is backed by Java's CompletableFuture \([https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)\)
 
@@ -189,24 +189,30 @@ Here are the method signatures for the methods above, which you can call from th
 
 ```javascript
 /**
- * This method accepts an infinite amount of future objects or closures in order to execute them in parallel,
- * waits for them and then processes their combined results into an array of results.
+ * This method accepts an infinite amount of future objects, closures or an array of future objects/closures
+ * in order to execute them in parallel.  It will return back to you a future that will return back an array
+ * of results from every future that was executed. This way you can further attach processing and pipelining
+ * on the constructed array of values.
  *
  * <pre>
- * results = allOf( f1, f2, f3 )
+ * results = all( f1, f2, f3 ).get()
+ * all( f1, f2, f3 ).then( (values) => logResults( values ) );
  * </pre>
  *
- * @result An array containing all of the collected results
+ * @result A future that will return the results in an array
  */
-array function allOf()
+Future function all(){
 
 /**
- * This function can accept an array of items and apply a function
+ * This function can accept an array of items or a struct and apply a function
  * to each of the item's in parallel.  The `fn` argument receives the appropriate item
  * and must return a result.  Consider this a parallel map() operation
  *
  * <pre>
+ * // Array
  * allApply( items, ( item ) => item.getMemento() )
+ * // Struct: The result object is a struct of `key` and `value`
+ * allApply( data, ( item ) => item.key & item.value.toString() )
  * </pre>
  *
  * @items An array to process
@@ -215,11 +221,11 @@ array function allOf()
  *
  * @return An array with the items processed
  */
-array function allApply( array items, required fn, executor )
+any function allApply( any items, required fn, executor ){
 
 /**
  * This method accepts an infinite amount of future objects or closures and will execute them in parallel.
- * However, instead of returning all of the results in an array like allOf(), this method will return
+ * However, instead of returning all of the results in an array like all(), this method will return
  * the future that executes the fastest!
  *
  * <pre>
@@ -234,7 +240,7 @@ Future function anyOf()
 /**
  * This method seeds a timeout into this future that can be used by the following operations:
  *
- * - allOf()
+ * - all()
  * - allApply()
  *
  * @timeout The timeout value to use, defaults to forever
@@ -253,7 +259,7 @@ var f = asyncManager().anyOf( ()=>dns1.resolve(), ()=>dns2.resolve() );
 
 // Let's process some data
 var data = [1,2, ... 100 ];
-var results = asyncManager().allOf( data );
+var results = asyncManager().all( data );
 
 // Process multiple futures
 var f1 = asyncManager.newFuture( function(){
@@ -264,11 +270,11 @@ var f2 = asyncManager.newFuture( function(){
 } );
 var aResults = asyncManager.newFuture()
     .withTimeout( 5 )
-    .allOf( f1, f2 );
+    .all( f1, f2 );
 
 // Process mementos for an array of objects
 function index( event, rc, prc ){
-    return async().allApply( 
+    return async().allApply(
         orderService.findAll(),
         ( order ) => order.getMemento()
     );
@@ -282,7 +288,7 @@ Please also note that you can choose your own Executor for the parallel computat
 ```javascript
 var data = [ 1 ... 5000 ];
 var results = newFuture( executor : asyncManager.$executors.newCachedThreadPool() )
-    .allOf( data );
+    .all( data );
 
 // Process mementos for an array of objects on a custom pool
 function index( event, rc, prc ){
@@ -576,11 +582,4 @@ property name="taskScheduler" inject="executor";
 // Inject the `coldbox-tasks` as `taskScheduler`
 property name="taskScheduler" inject="executor:coldbox-tasks";
 ```
-
-## Pending Todo
-
-* [ ] * Initial Docs
-* [ ] * WireBox `future` annotation
-* [ ] * `runAsyncEvent():Future`
-* [ ] * Migrate interceptors to leverage tasks instead of cfthread
 

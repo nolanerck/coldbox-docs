@@ -212,7 +212,10 @@
 
 ## Digging Deeper
 
-* [Async Programming](digging-deeper/promises-async-programming.md)
+* [Async Programming](digging-deeper/promises-async-programming/README.md)
+  * [Async Pipelines & Futures](digging-deeper/promises-async-programming/async-pipelines-and-futures.md)
+  * [Parallel Computations](digging-deeper/promises-async-programming/parallel-computations.md)
+  * [Executors](digging-deeper/promises-async-programming/executors.md)
 * [Interceptors](digging-deeper/interceptors/README.md)
   * [How do they work?](digging-deeper/interceptors/how-do-they-work/README.md)
     * [Conventions](digging-deeper/interceptors/how-do-they-work/conventions.md)
